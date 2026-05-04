@@ -1,0 +1,23 @@
+require('dotenv').config();
+
+const express = require('express');
+const { listenFunc } = require('./db');
+
+const app = express();
+
+app.use(express.static('.'));
+
+app.get('/get-word', async (req, res) => {
+    try {
+        const rows = await listenFunc();
+        if (rows.length > 0) {
+            res.json({ word: rows[0].palavra });
+        } else {
+            res.status(500).send('No word found');
+        }
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
