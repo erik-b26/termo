@@ -35,33 +35,34 @@ document.getElementById('submit').addEventListener('click', function() {
     primeiraCorreta = 0;
     primeiraErrada = 0;
     primeiraInexistente = 0;
-    document.getElementById('corretas').innerHTML = '';
+    document.getElementById('corretas').innerHTML = 'lugar certo';
     document.getElementById('erradas').innerHTML = '';
     document.getElementById('inexistentes').innerHTML = '';
+    const correctBoxes = document.querySelectorAll('#correctBoxes .correct-box');
+    correctBoxes.forEach(box => box.textContent = '');
     
     for(let i = 0; i < 5; i++){
         if (secreta[i] === palpite[i]) {
-            if(primeiraCorreta == 0){
-                document.getElementById('corretas').innerHTML += "lugar certo " + palpite[i]
-            }else{
-                document.getElementById('corretas').innerHTML += "-" + palpite[i]
-            }
-            primeiraCorreta++
-        } else if (secreta.includes(palpite[i])) {
-            letrasDescobertas.add(palpite[i]);
-            if(primeiraErrada == 0){
-                document.getElementById('erradas').innerHTML += "lugar errado: " + palpite[i]
-            }else{
-                document.getElementById('erradas').innerHTML += "-" + palpite[i]    
-            }
-            primeiraErrada++
-        } else {
-            if(primeiraInexistente == 0){
-                document.getElementById('inexistentes').innerHTML += "não existe: " + palpite[i]
+            correctBoxes[i].textContent = palpite[i];
+        }
+        // ...existing code for erradas e inexistentes...
+        if (secreta[i] !== palpite[i]) {
+            if (secreta.includes(palpite[i])) {
+                letrasDescobertas.add(palpite[i]);
+                if(primeiraErrada == 0){
+                    document.getElementById('erradas').innerHTML += "lugar errado: " + palpite[i]
+                }else{
+                    document.getElementById('erradas').innerHTML += "-" + palpite[i]    
+                }
+                primeiraErrada++
             } else {
-                document.getElementById('inexistentes').innerHTML += "-" + palpite[i]
+                if(primeiraInexistente == 0){
+                    document.getElementById('inexistentes').innerHTML += "não existe: " + palpite[i]
+                } else {
+                    document.getElementById('inexistentes').innerHTML += "-" + palpite[i]
+                }
+                primeiraInexistente++
             }
-            primeiraInexistente++
         }
     }
     document.getElementById('letrasCertas').innerHTML = 'Letras certas na palavra: ' + Array.from(letrasDescobertas).join(', ');
