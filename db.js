@@ -27,7 +27,7 @@ async function listenFunc(){
 DECLARE
     resultado INTEGER;
 BEGIN
-    SELECT id_palavra FROM REPOSITORIO WHERE ID_PALAVRA = (SELECT floor(random() * 600 + 1)) INTO resultado;
+    SELECT id_palavra FROM REPOSITORIO WHERE ID_PALAVRA = (SELECT floor(random() * 562 + 1)) INTO resultado;
     UPDATE REPOSITORIO SET INATIVA = NOW() WHERE id_palavra = resultado;
 END $$;
 

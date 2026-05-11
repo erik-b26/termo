@@ -76,5 +76,3 @@ document.getElementById('submit').addEventListener('click', function() {
     }
     document.getElementById('palpiteInput').value = '';
 });
-
-// teste
