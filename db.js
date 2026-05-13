@@ -23,20 +23,21 @@ async function connect() {
 
 async function listenFunc(){
     const client = await connect();
-    const res = await client.query(`DO $$
+    try {
+        await client.query(`DO $$
 DECLARE
     resultado INTEGER;
 BEGIN
     SELECT id_palavra FROM REPOSITORIO WHERE ID_PALAVRA = (SELECT floor(random() * 562 + 1)) INTO resultado;
     UPDATE REPOSITORIO SET INATIVA = NOW() WHERE id_palavra = resultado;
-END $$;
+END $$;`);
 
-SELECT * FROM REPOSITORIO
-ORDER BY INATIVA;
-
-SELECT PALAVRA FROM REPOSITORIO
-WHERE INATIVA = (SELECT MAX(INATIVA) FROM REPOSITORIO)`);
-    return res.rows;
+        const res = await client.query(`SELECT PALAVRA FROM REPOSITORIO
+            WHERE INATIVA = (SELECT MAX(INATIVA) FROM REPOSITORIO)`);
+        return res.rows;
+    } finally {
+        client.release();
+    }
 
 }
 

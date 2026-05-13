@@ -5,24 +5,27 @@ let primeiraInexistente = 0
 let tentativas = 0
 let letrasDescobertas = new Set();
 
-// Desabilitar inputs até definir a palavra secreta
-document.getElementById('palpiteInput').disabled = true;
-document.getElementById('submit').disabled = true;
-
 window.addEventListener('load', async () => {
     try {
         const response = await fetch('/get-word');
+        if (!response.ok) {
+            const body = await response.text();
+            throw new Error('Falha ao obter palavra do servidor: ' + response.status + ' - ' + body);
+        }
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            const body = await response.text();
+            throw new Error('Resposta inesperada do servidor: ' + body);
+        }
         const data = await response.json();
         secreta = data.word.toLowerCase();
         document.getElementById('palpiteInput').disabled = false;
         document.getElementById('submit').disabled = false;
     } catch (err) {
         console.error('Error fetching word:', err);
-        // Fallback to a default word for testing
-        secreta = 'teste';
-        document.getElementById('mensagem').innerHTML = 'Usando palavra padrão para teste: teste';
-        document.getElementById('palpiteInput').disabled = false;
-        document.getElementById('submit').disabled = false;
+        document.getElementById('mensagem').innerHTML = 'Erro ao obter a palavra do servidor: ' + err.message;
+        document.getElementById('palpiteInput').disabled = true;
+        document.getElementById('submit').disabled = true;
     }
 });
 

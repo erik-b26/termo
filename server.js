@@ -1,4 +1,4 @@
-require('dotenv').config();
+﻿require('dotenv').config();
 
 const express = require('express');
 const { listenFunc } = require('./db');
@@ -10,13 +10,15 @@ app.use(express.static('.'));
 app.get('/get-word', async (req, res) => {
     try {
         const rows = await listenFunc();
-        if (rows.length > 0) {
-            res.json({ word: rows[0].palavra });
-        } else {
-            res.status(500).send('No word found');
+        if (!rows || rows.length === 0) {
+            return res.status(500).send('No word found');
         }
+        if (!rows[0] || !rows[0].palavra) {
+            return res.status(500).send('Invalid row format from database');
+        }
+        return res.json({ word: rows[0].palavra });
     } catch (err) {
-        res.status(500).send(err.message);
+        return res.status(500).send(err.message);
     }
 });
 
