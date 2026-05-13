@@ -42,4 +42,3 @@ END $$;`);
 }
 
 module.exports = { connect, listenFunc };
-// teste
