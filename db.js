@@ -21,13 +21,21 @@ async function connect() {
 
 }
 
-async function listenFunc(){
+async function listenFunc(mode = 'normal'){
     const client = await connect();
+    let minId, maxId;
+    if (mode === 'hard') {
+        minId = 301;
+        maxId = 600;
+    } else {
+        minId = 1;
+        maxId = 300;
+    }
     const res = await client.query(`DO $$
 DECLARE
     resultado INTEGER;
 BEGIN
-    SELECT id_palavra FROM REPOSITORIO WHERE ID_PALAVRA = (SELECT floor(random() * 600 + 1)) INTO resultado;
+    SELECT id_palavra FROM REPOSITORIO WHERE ID_PALAVRA = (SELECT floor(random() * ${maxId - minId + 1} + ${minId})) INTO resultado;
     UPDATE REPOSITORIO SET INATIVA = NOW() WHERE id_palavra = resultado;
 END $$;
 

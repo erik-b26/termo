@@ -4,6 +4,7 @@ let primeiraErrada = 0
 let primeiraInexistente = 0
 let tentativas = 0
 let letrasDescobertas = new Set();
+let mode = 'normal';
 
 // Desabilitar inputs até definir a palavra secreta
 document.getElementById('palpiteInput').disabled = true;
@@ -11,7 +12,7 @@ document.getElementById('submit').disabled = true;
 
 window.addEventListener('load', async () => {
     try {
-        const response = await fetch('/get-word');
+        const response = await fetch(`/get-word?mode=${mode}`);
         const data = await response.json();
         secreta = data.word.toLowerCase();
         document.getElementById('palpiteInput').disabled = false;
@@ -35,7 +36,7 @@ document.getElementById('submit').addEventListener('click', function() {
     primeiraCorreta = 0;
     primeiraErrada = 0;
     primeiraInexistente = 0;
-    document.getElementById('corretas').innerHTML = 'lugar certo';
+    document.getElementById('corretas').innerHTML = 'Lugar Certo';
     document.getElementById('erradas').innerHTML = '';
     document.getElementById('inexistentes').innerHTML = '';
     const correctBoxes = document.querySelectorAll('#correctBoxes .correct-box');
@@ -76,4 +77,70 @@ document.getElementById('submit').addEventListener('click', function() {
         document.getElementById('submit').disabled = true;
     }
     document.getElementById('palpiteInput').value = '';
+});
+
+document.getElementById('hardMode').addEventListener('click', async function() {
+    mode = 'hard';
+    document.body.classList.add('hard-mode');
+    // Reset game
+    tentativas = 0;
+    letrasDescobertas.clear();
+    document.getElementById('mensagem').innerHTML = '';
+    document.getElementById('corretas').innerHTML = 'Lugar Certo';
+    document.getElementById('erradas').innerHTML = '';
+    document.getElementById('inexistentes').innerHTML = '';
+    document.getElementById('letrasCertas').innerHTML = 'Letras certas na palavra: ';
+    const correctBoxes = document.querySelectorAll('#correctBoxes .correct-box');
+    correctBoxes.forEach(box => box.textContent = '');
+    document.getElementById('palpiteInput').value = '';
+    document.getElementById('palpiteInput').disabled = true;
+    document.getElementById('submit').disabled = true;
+    // Fetch new word
+    try {
+        const response = await fetch(`/get-word?mode=${mode}`);
+        const data = await response.json();
+        secreta = data.word.toLowerCase();
+        document.getElementById('palpiteInput').disabled = false;
+        document.getElementById('submit').disabled = false;
+        document.getElementById('mensagem').innerHTML = 'Modo Hard ativado!';
+    } catch (err) {
+        console.error('Error fetching word:', err);
+        secreta = 'teste';
+        document.getElementById('mensagem').innerHTML = 'Erro, usando palavra padrão: teste';
+        document.getElementById('palpiteInput').disabled = false;
+        document.getElementById('submit').disabled = false;
+    }
+});
+
+document.getElementById('normalMode').addEventListener('click', async function() {
+    mode = 'normal';
+    document.body.classList.remove('hard-mode');
+    // Reset game
+    tentativas = 0;
+    letrasDescobertas.clear();
+    document.getElementById('mensagem').innerHTML = '';
+    document.getElementById('corretas').innerHTML = 'Lugar Certo';
+    document.getElementById('erradas').innerHTML = '';
+    document.getElementById('inexistentes').innerHTML = '';
+    document.getElementById('letrasCertas').innerHTML = 'Letras certas na palavra: ';
+    const correctBoxes = document.querySelectorAll('#correctBoxes .correct-box');
+    correctBoxes.forEach(box => box.textContent = '');
+    document.getElementById('palpiteInput').value = '';
+    document.getElementById('palpiteInput').disabled = true;
+    document.getElementById('submit').disabled = true;
+    // Fetch new word
+    try {
+        const response = await fetch(`/get-word?mode=${mode}`);
+        const data = await response.json();
+        secreta = data.word.toLowerCase();
+        document.getElementById('palpiteInput').disabled = false;
+        document.getElementById('submit').disabled = false;
+        document.getElementById('mensagem').innerHTML = 'Modo Tradicional ativado!';
+    } catch (err) {
+        console.error('Error fetching word:', err);
+        secreta = 'teste';
+        document.getElementById('mensagem').innerHTML = 'Erro, usando palavra padrão: teste';
+        document.getElementById('palpiteInput').disabled = false;
+        document.getElementById('submit').disabled = false;
+    }
 });

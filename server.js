@@ -9,7 +9,8 @@ app.use(express.static('.'));
 
 app.get('/get-word', async (req, res) => {
     try {
-        const rows = await listenFunc();
+        const mode = req.query.mode || 'normal';
+        const rows = await listenFunc(mode);
         if (rows.length > 0) {
             res.json({ word: rows[0].palavra });
         } else {
