@@ -148,3 +148,4 @@ document.getElementById('normalMode').addEventListener('click', async function()
         document.getElementById('submit').disabled = false;
     }
 });
+//teste
