@@ -4,6 +4,7 @@ let primeiraErrada = 0
 let primeiraInexistente = 0
 let tentativas = 0
 let letrasDescobertas = new Set();
+let letrasInexistentes = new Set();
 
 window.addEventListener('load', async () => {
     try {
@@ -42,7 +43,6 @@ document.getElementById('submit').addEventListener('click', function() {
     document.getElementById('erradas').innerHTML = '';
     document.getElementById('inexistentes').innerHTML = '';
     const correctBoxes = document.querySelectorAll('#correctBoxes .correct-box');
-    correctBoxes.forEach(box => box.textContent = '');
     
     for(let i = 0; i < 5; i++){
         if (secreta[i] === palpite[i]) {
@@ -59,6 +59,7 @@ document.getElementById('submit').addEventListener('click', function() {
                 }
                 primeiraErrada++
             } else {
+                letrasInexistentes.add(palpite[i]);
                 if(primeiraInexistente == 0){
                     document.getElementById('inexistentes').innerHTML += "não existe: " + palpite[i]
                 } else {
@@ -67,6 +68,10 @@ document.getElementById('submit').addEventListener('click', function() {
                 primeiraInexistente++
             }
         }
+    }
+
+    if (letrasInexistentes.size > 0) {
+        document.getElementById('inexistentes').innerHTML = 'não existe: ' + Array.from(letrasInexistentes).join(', ');
     }
 
 
@@ -90,6 +95,7 @@ document.getElementById('hardMode').addEventListener('click', async function() {
     // Reset game
     tentativas = 0;
     letrasDescobertas.clear();
+    letrasInexistentes.clear();
     document.getElementById('mensagem').innerHTML = '';
     document.getElementById('corretas').innerHTML = 'Lugar Certo';
     document.getElementById('erradas').innerHTML = '';
@@ -110,7 +116,7 @@ document.getElementById('hardMode').addEventListener('click', async function() {
         document.getElementById('mensagem').innerHTML = 'Modo Hard ativado!';
     } catch (err) {
         console.error('Error fetching word:', err);
-        secreta = 'teste';
+       
         document.getElementById('mensagem').innerHTML = 'Erro, usando palavra padrão: teste';
         document.getElementById('palpiteInput').disabled = false;
         document.getElementById('submit').disabled = false;
@@ -122,6 +128,7 @@ document.getElementById('normalMode').addEventListener('click', async function()
     // Reset game
     tentativas = 0;
     letrasDescobertas.clear();
+    letrasInexistentes.clear();
     document.getElementById('mensagem').innerHTML = '';
     document.getElementById('corretas').innerHTML = 'Lugar Certo';
     document.getElementById('erradas').innerHTML = '';
@@ -142,7 +149,6 @@ document.getElementById('normalMode').addEventListener('click', async function()
         document.getElementById('mensagem').innerHTML = 'Modo Tradicional ativado!';
     } catch (err) {
         console.error('Error fetching word:', err);
-        secreta = 'teste';
         document.getElementById('mensagem').innerHTML = 'Erro, usando palavra padrão: teste';
         document.getElementById('palpiteInput').disabled = false;
         document.getElementById('submit').disabled = false;
