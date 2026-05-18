@@ -88,6 +88,12 @@ document.getElementById('submit').addEventListener('click', function() {
     document.getElementById('palpiteInput').value = '';
 });
 
+document.getElementById('palpiteInput').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        document.getElementById('submit').click();
+    }
+});
 
 document.getElementById('hardMode').addEventListener('click', async function() {
     mode = 'hard';
