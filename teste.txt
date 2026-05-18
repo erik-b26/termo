@@ -1,0 +1,17 @@
+* topicos que precisamos fazer em nosso codigo
+1 contador de chances restantes
+
+2 ajustar para que na troca dos modos, entre normal e hard,
+ não aconteça de resetar as chances e perder os fronts e 
+
+3 fazer com que a tecla enter envie a palavra,
+ e não tenha que ficar usando o mouse para clicar em enviar palavra
+
+4 sugestão: Colocar cores mais agressivas no modo hard(puxado para o vermelho/azul forte)
+
+5 fazer a documentação do codigo
+
+6 fazer os slides da apresentação:
+    simples e com poucas palavras
+    com prints do codigo e do jogo
+    link ao final para mostrar o jogo e o extra
