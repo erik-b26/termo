@@ -4,6 +4,34 @@ const maxTentativas = 6;
 let tentativas = 0
 let letrasDescobertas = new Set();
 let letrasInexistentes = new Set();
+const submitButton = document.getElementById('submit');
+
+function reiniciarJogo() {
+    tentativas = 0;
+    letrasDescobertas.clear();
+    letrasInexistentes.clear();
+    document.getElementById('mensagem').innerHTML = '';
+    document.getElementById('corretas').innerHTML = 'Lugar Certo';
+    document.getElementById('erradas').innerHTML = '';
+    document.getElementById('inexistentes').innerHTML = '';
+    document.getElementById('letrasCertas').innerHTML = 'Letras certas na palavra: ';
+    const correctBoxes = document.querySelectorAll('#correctBoxes .correct-box');
+    correctBoxes.forEach(box => box.textContent = '');
+    document.getElementById('palpiteInput').value = '';
+    document.getElementById('palpiteInput').disabled = false;
+    submitButton.disabled = false;
+    submitButton.textContent = 'Enviar';
+    atualizarChances();
+    return fetch(`/get-word?mode=${mode}`)
+        .then(response => response.json())
+        .then(data => {
+            secreta = data.word.toLowerCase();
+        })
+        .catch(err => {
+            console.error('Error fetching word:', err);
+            document.getElementById('mensagem').innerHTML = 'Erro ao obter a palavra do servidor: ' + err.message;
+        });
+}
 
 function atualizarChances() {
     const chancesRestantes = Math.max(0, maxTentativas - tentativas);
@@ -36,6 +64,10 @@ window.addEventListener('load', async () => {
 });
 
 document.getElementById('submit').addEventListener('click', function() {
+        if (submitButton.textContent.trim().toLowerCase() === 'jogar novamente') {
+                reiniciarJogo();
+                return;
+        }
   let palpite = document.getElementById('palpiteInput').value.toLowerCase();
     if (palpite.length !== 5 || tentativas >= maxTentativas) return;
     
@@ -79,11 +111,11 @@ document.getElementById('submit').addEventListener('click', function() {
     if (palpite === secreta) {
         document.getElementById('mensagem').innerHTML = "Você acertou a palavra!";
         document.getElementById('palpiteInput').disabled = true;
-        document.getElementById('submit').disabled = true;
+        submitButton.textContent = 'Jogar Novamente';
     } else if (tentativas >= maxTentativas) {
         document.getElementById('mensagem').innerHTML = "Você perdeu! A palavra era: " + secreta;
         document.getElementById('palpiteInput').disabled = true;
-        document.getElementById('submit').disabled = true;
+        submitButton.textContent = 'Jogar Novamente';
     }
     document.getElementById('palpiteInput').value = '';
 });
