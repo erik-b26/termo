@@ -49,7 +49,8 @@ document.getElementById('submit').addEventListener('click', function() {
     
     for(let i = 0; i < 5; i++){
         if (secreta[i] === palpite[i]) {
-            correctBoxes[i].textContent = palpite[i];
+            const boxIndex = mode === 'hard' ? 4 - i : i;
+            correctBoxes[boxIndex].textContent = palpite[i];
         }
         // ...existing code for erradas e inexistentes...
         if (secreta[i] !== palpite[i]) {
